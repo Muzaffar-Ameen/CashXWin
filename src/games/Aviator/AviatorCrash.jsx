@@ -108,7 +108,9 @@ const AviatorCrash = () => {
       const elapsedMs = performance.now() - start;
       // use exponential-ish growth; tuned for demo feel
       const elapsedSec = elapsedMs / 1000;
-      const newMult = +(1 + elapsedSec * elapsedSec * 0.6).toFixed(2);
+      // const newMult = +(1 + elapsedSec * elapsedSec * 0.6).toFixed(2);
+      const newMult = +(baseMultiplier + elapsedSec * elapsedSec * 0.6).toFixed(2);
+
 
       setMultiplier((prev) => {
         const m = Math.max(prev, newMult);

@@ -39,6 +39,7 @@
   background: linear-gradient(90deg, #facc15, #f97316) !important;
   box-shadow: 0 0 10px rgba(250, 204, 21, 0.8) !important;
   animation: gamesUnderlinePulse 1.8s ease-in-out infinite !important;
+  
 }
 
 /* small chip icon before "Games" */
