@@ -1,0 +1,140 @@
+.top-nav {
+  position: sticky;   /* or: position: fixed; */
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 32px;
+  background: linear-gradient(90deg, #020617, #111827, #020617);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.75);
+}
+
+.page {
+  padding-top: 20px; /* match your nav height */
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-chip {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #facc15, #b45309);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #111827;
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.75);
+  animation: chipPulse 2.5s ease-in-out infinite;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-title {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: 18px;
+}
+
+.logo-subtitle {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* .nav-links {
+  display: flex;
+  gap: 18px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+} */
+.nav-links {
+  display: flex;
+  gap: 18px;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;        /* allow wrapping if space is small */
+}
+
+/* mobile */
+@media (max-width: 640px) {
+  .top-nav {
+    padding: 8px 10px;
+    flex-wrap: wrap;               /* allow header content to wrap */
+  }
+
+  .nav-links {
+    width: 100%;                  /* take full width */
+    display: flex;
+    flex-wrap: wrap;              /* allow nav items to go to next line */
+    justify-content: space-around;/* spread items so no overflow */
+    column-gap: 10px;
+    row-gap: 6px;
+  }
+
+  .nav-link {
+    font-size: 11px;
+    padding: 4px 6px;
+    white-space: nowrap;          /* keep each label in one line */
+  }
+}
+
+.nav-link {
+  border: none;
+  background: transparent;
+  color: #ebe5e6;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 6px 2px ;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.nav-link:hover {
+  background: #facc15;
+  color: #0f172a;
+  border-radius: 40px;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: linear-gradient(90deg, #facc15, #f97316);
+  border-radius: 999px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.nav-link--active::after,
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+@keyframes chipPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}

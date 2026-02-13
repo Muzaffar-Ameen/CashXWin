@@ -1,0 +1,99 @@
+.page-privacy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: pageFadeIn 0.4s ease-out;
+}
+
+.page-heading h1 {
+  margin: 4px 0 8px;
+  font-size: 26px;
+}
+
+.page-heading p {
+  margin: 0;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.page-kicker {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #facc15;
+}
+
+/* cards */
+.privacy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.privacy-card {
+  background: linear-gradient(135deg, #020617, #020617);
+  border-radius: 16px;
+  padding: 16px 18px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.8);
+}
+
+.privacy-card h2 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.privacy-card p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #d1d5db;
+}
+
+.privacy-card ul {
+  margin: 0 0 8px 18px;
+  padding: 0;
+  font-size: 13px;
+  color: #e5e7eb;
+}
+
+.privacy-card--emphasis {
+  background: radial-gradient(circle at 0 0, rgba(34, 197, 94, 0.15), #020617);
+}
+
+/* extra notes */
+.privacy-notes h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.privacy-notes p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #d1d5db;
+}
+
+.privacy-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.privacy-badge {
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.9);
+}
+
+/* animations */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

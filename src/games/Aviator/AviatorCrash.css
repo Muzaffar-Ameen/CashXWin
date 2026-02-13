@@ -1,0 +1,519 @@
+/* Card shell (same theme as your Roulette) */
+.aviator-card {
+  width: 100%;
+  max-width: 1100px;
+  border-radius: 20px;
+  padding: 18px 20px 22px;
+  background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.14), #020617);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.9);
+}
+
+/* layout */
+.aviator-layout {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.aviator-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aviator-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* sky area */
+.aviator-sky {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 16px 16px 20px;
+  background: radial-gradient(circle at top, #0f172a, #020617 70%);
+  box-shadow: inset 0 0 24px rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  min-height: 220px;
+}
+
+/* background grid / trail lines */
+.aviator-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  background-image: linear-gradient(
+      to right,
+      rgba(184, 148, 148, 0.3) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to top,
+      rgba(148, 163, 184, 0.2) 1px,
+      transparent 1px
+    );
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+/* animated background in plane area */
+.aviator-flight-glow {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 160%;
+  height: 140%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 20% 60%,
+    rgba(250, 204, 21, 0.18),
+    transparent 60%
+  );
+  opacity: 0;
+  mix-blend-mode: screen;
+  filter: blur(2px);
+  transform: translate3d(0, 0, 0);
+  transition: opacity 0.4s ease-out;
+}
+
+/* when flying, you can toggle this with a class from JSX if you want */
+.aviator-sky.is-flying .aviator-flight-glow {
+  opacity: 1;
+}
+
+/* multiplier display */
+.aviator-multiplier {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: #e5e7eb;
+  margin-bottom: 10px;
+}
+
+.aviator-label {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.aviator-live-mult {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #facc15;
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.8);
+}
+
+.aviator-crashed-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f97316;
+}
+
+.aviator-countdown {
+  font-size: 14px;
+  color: #e5e7eb;
+}
+
+/* track */
+.aviator-track {
+  position: relative;
+  z-index: 1;
+  margin-top: 10px;
+  height: 180px;              /* a bit taller so diagonal path has space */
+  overflow: visible;
+}
+
+/* path / trail */
+.aviator-trail {
+  position: absolute;
+  left: 6%;
+  bottom: 12%;
+  height: 2px;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f97316, #facc15);
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.9);
+  opacity: 0;
+  transform-origin: left center;
+  transform: rotate(-28deg);   /* same angle as plane */
+  transition: width 0.08s linear, opacity 0.2s ease-out;
+}
+
+/* plane */
+.aviator-plane-wrapper {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* this is what JS moves: we now sit on the same ~120° angle as the trail */
+.aviator-plane {
+  position: absolute;
+  left: 6%;
+  bottom: 12%;
+  /* rotate first, then translate – so JS translate(x%, y%) is along this diagonal */
+  transform: rotate(-28deg) translate(0%, 0%);
+  transform-origin: center;
+  transition: transform 0.065s linear;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* plane body – small extra motion when taking off */
+.plane-body {
+  width: 50px;
+  height: 30px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #facc15, #b45309);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.9);
+  font-size: 18px;
+  animation: planeTilt 0.7s ease-out forwards;
+}
+
+.plane-body span {
+  transform: translateX(1px);
+}
+
+/* engine fire – more “jet” feel */
+.plane-fire {
+  width: 20px;
+  height: 12px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 10% 50%, #f97316, transparent 70%);
+  filter: blur(1px);
+  animation: firePulse 0.25s ease-in-out infinite;
+}
+
+/* takeoff wobble */
+@keyframes planeTilt {
+  0% {
+    transform: translateY(2px) scale(0.95);
+  }
+  40% {
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* engine fire pulse (keep, just slightly faster) */
+@keyframes firePulse {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleX(1.3);
+    opacity: 1;
+  }
+}
+
+/* crash banner – subtle “pop in” and glow when crash happens */
+.aviator-crash-banner {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(185, 28, 28, 0.9);
+  border: 1px solid #f97316;
+  color: #f9fafb;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  box-shadow: 0 0 18px rgba(248, 113, 113, 0.7);
+  animation: crashPulse 0.6s ease-out;
+}
+
+@keyframes crashPulse {
+  0% {
+    transform: scale(0.8) translateY(-6px);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+
+/* provably fair demo */
+.aviator-fair-box {
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.95);
+  padding: 8px 10px 10px;
+}
+
+.fair-header {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.fair-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+
+.fair-label {
+  display: block;
+  font-size: 10px;
+  color: #6b7280;
+}
+
+.fair-value {
+  font-size: 11px;
+  color: #e5e7eb;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* sidebar cards */
+.aviator-balance-card {
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.balance-row--win .label {
+  color: #22c55e;
+}
+
+.balance-row--win .value {
+  color: #22c55e;
+}
+
+.balance-row .label {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.balance-row .value {
+  font-size: 15px;
+}
+
+/* bet panel */
+.aviator-bet-panel {
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 10px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+.bet-header--secondary {
+  margin-top: 4px;
+}
+
+.bet-edit button {
+  border: none;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 11px;
+  padding: 4px 6px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  margin-left: 4px;
+}
+
+.bet-edit button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.bet-edit button:hover:not(:disabled) {
+  border-color: #facc15;
+}
+
+/* bet input rows */
+.bet-input-row {
+  display: flex;
+  margin-top: 4px;
+  gap: 6px;
+  align-items: center;
+}
+
+.bet-input-row input[type="number"] {
+  flex: 1;
+  background: #020617;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 6px 10px;
+  color: #e5e7eb;
+  font-size: 13px;
+}
+
+.bet-input-row input[type="number"]:disabled {
+  opacity: 0.6;
+}
+
+.bet-max-btn {
+  border-radius: 999px;
+  border: none;
+  padding: 6px 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: linear-gradient(90deg, #facc15, #f97316);
+  color: #0f172a;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.5);
+}
+
+.bet-max-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  box-shadow: none;
+}
+
+.bet-mult-label {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* main actions */
+.aviator-actions {
+  margin-top: 8px;
+}
+
+.aviator-main-btn {
+  width: 100%;
+}
+
+/* variant for danger/green etc. */
+.btn-danger {
+  background: #b91c1c;
+  color: #f9fafb;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+.btn-disabled {
+  background: rgba(31, 41, 55, 0.9);
+  color: #9ca3af;
+  cursor: default;
+}
+
+/* history */
+.aviator-history {
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 8px 10px;
+}
+
+.history-header {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.history-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.history-pill {
+  min-width: 34px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  text-align: center;
+  color: #f9fafb;
+}
+
+.history-pill--red {
+  background: #b91c1c;
+}
+
+.history-pill--green {
+  background: #16a34a;
+}
+
+.history-pill--gold {
+  background: #facc15;
+  color: #0f172a;
+}
+
+/* last round */
+.aviator-last-round {
+  margin-top: 2px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.aviator-last-round .label {
+  color: #9ca3af;
+}
+
+.aviator-last-round .value {
+  font-weight: 600;
+}
+
+.text-red {
+  color: #f97373;
+}
+
+.text-green {
+  color: #22c55e;
+}
+
+.text-gold {
+  color: #facc15;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .aviator-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
