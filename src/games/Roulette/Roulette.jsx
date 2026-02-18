@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "./Roulette.css";
+import { useNavigate } from "react-router-dom";
+
 
 const Roulette = () => {
+  const navigate = useNavigate();
   const [bank, setBank] = useState(1000);
   const [currentBet, setCurrentBet] = useState(0);
   const [wager, setWager] = useState(5);
@@ -18,16 +21,12 @@ const Roulette = () => {
   const ballTrackRef = useRef(null);
 
   const numRed = [
-    1, 3, 5, 7, 9, 12, 14, 16, 18,
-    19, 21, 23, 25, 27, 30, 32, 34, 36,
+    1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36,
   ];
 
   const wheelNumbersAC = [
-    0, 26, 3, 35, 12, 28, 7, 29, 18,
-    22, 9, 31, 14, 20, 1, 33, 16,
-    24, 5, 10, 23, 8, 30, 11, 36,
-    13, 27, 6, 34, 17, 25, 2, 21,
-    4, 19, 15, 32,
+    0, 26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10,
+    23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32,
   ];
 
   const ringNumbers = [
@@ -114,7 +113,7 @@ const Roulette = () => {
 
     setBets((prev) => {
       const existingIndex = prev.findIndex(
-        (b) => b.numbers === numbersStr && b.type === type
+        (b) => b.numbers === numbersStr && b.type === type,
       );
       if (existingIndex !== -1) {
         const updated = [...prev];
@@ -229,7 +228,10 @@ const Roulette = () => {
       setSpinResult({ number: winningSpin, winValue, betTotal });
 
       setLastNumbers((prev) => {
-        const next = [{ n: winningSpin, color: getNumberColor(winningSpin) }, ...prev];
+        const next = [
+          { n: winningSpin, color: getNumberColor(winningSpin) },
+          ...prev,
+        ];
         return next.slice(0, 10);
       });
 
@@ -271,9 +273,18 @@ const Roulette = () => {
   return (
     <div className="game-shell page">
       <div className="game-card roulette-card">
-        <header className="game-header">
+        <header className="game-header roulette-header">
+          <button
+            type="button"
+            className="roulette-back-btn"
+            onClick={() => navigate("/")}
+          >
+            ⬅ Back
+          </button>
           <h1>Roulette</h1>
-          <p>European wheel with full betting table, chips and smooth motion.</p>
+          <p>
+            European wheel with full betting table, chips and smooth motion.
+          </p>
         </header>
 
         <div className="roulette-layout">
@@ -317,7 +328,9 @@ const Roulette = () => {
               </div>
               <div>
                 <span className="label">Current bet</span>
-                <span className="value">{currentBet.toLocaleString("en-GB")}</span>
+                <span className="value">
+                  {currentBet.toLocaleString("en-GB")}
+                </span>
               </div>
             </div>
 
@@ -391,7 +404,9 @@ const Roulette = () => {
                           <div
                             key={n}
                             className={`roulette-cell bet-cell ${colorClass}`}
-                            onClick={() => setBet(String(n), "inside_whole", 35)}
+                            onClick={() =>
+                              setBet(String(n), "inside_whole", 35)
+                            }
                             onContextMenu={(e) => {
                               e.preventDefault();
                               removeBet(String(n), "inside_whole");
@@ -459,27 +474,23 @@ const Roulette = () => {
                 {[
                   {
                     label: "EVEN",
-                    nums:
-                      "2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36",
-                      extraClass: "cell-even-yellow",
+                    nums: "2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36",
+                    extraClass: "cell-even-yellow",
                   },
                   {
                     label: "RED",
-                    nums:
-                      "1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36",
+                    nums: "1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36",
                     extraClass: "cell-red",
                   },
                   {
                     label: "BLACK",
-                    nums:
-                      "2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35",
+                    nums: "2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35",
                     extraClass: "cell-black",
                   },
                   {
                     label: "ODD",
-                    nums:
-                      "1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35",
-                      extraClass: "cell-odd-yellow",
+                    nums: "1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35",
+                    extraClass: "cell-odd-yellow",
                   },
                 ].map((b) => (
                   <div
@@ -523,8 +534,8 @@ const Roulette = () => {
                     getNumberColor(spinResult.number) === "red"
                       ? "red"
                       : getNumberColor(spinResult.number) === "black"
-                      ? "black"
-                      : "green",
+                        ? "black"
+                        : "green",
                 }}
               >
                 {spinResult.number}

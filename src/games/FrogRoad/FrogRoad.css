@@ -1,0 +1,592 @@
+.frog-road-card {
+  width: 100%;
+  max-width: 1100px;
+  border-radius: 20px;
+  padding: 18px 20px 22px;
+  background: radial-gradient(circle at top left, rgba(74, 222, 128, 0.18), #020617);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.9);
+}
+
+.fr-layout {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+/* left panel */
+.fr-road-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fr-road-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.fr-road-info .info-line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fr-road-info .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.fr-road-info .value {
+  font-size: 13px;
+}
+
+.fr-risk-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  text-transform: capitalize;
+}
+
+.fr-mult {
+  font-weight: 600;
+}
+
+.fr-mult--active {
+  color: #a3e635;
+  text-shadow: 0 0 10px rgba(190, 242, 100, 0.8);
+}
+
+/* road area */
+.fr-road {
+  margin-top: 6px;
+  position: relative;
+  border-radius: 18px;
+  padding: 12px 14px;
+  background: radial-gradient(circle at top, #022c22, #020617 70%);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: inset 0 0 24px rgba(15, 23, 42, 0.9);
+  overflow: hidden;
+}
+
+.fr-road--live {
+  box-shadow:
+    inset 0 0 24px rgba(15, 23, 42, 0.9),
+    0 0 18px rgba(34, 197, 94, 0.35);
+}
+
+.fr-road--hit {
+  animation: frShake 0.4s ease-in-out;
+}
+
+/* soft water/forest glow */
+.fr-road::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 20% 0, rgba(34, 197, 94, 0.22), transparent 60%),
+    radial-gradient(circle at 80% 100%, rgba(56, 189, 248, 0.16), transparent 60%);
+  opacity: 0.7;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: frRoadGlow 12s ease-in-out infinite alternate;
+}
+
+@keyframes frRoadGlow {
+  0% {
+    transform: translate3d(0, 4px, 0) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate3d(8px, -4px, 0) scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(14px, 2px, 0) scale(1.02);
+    opacity: 0.6;
+  }
+}
+
+/* safe zones */
+.fr-safe-zone {
+  position: relative;
+  border-radius: 12px;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: #bbf7d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 10% 0%, #022c22, #020617 70%);
+  border: 1px dashed rgba(34, 197, 94, 0.6);
+}
+
+.fr-safe-zone--top {
+  margin-bottom: 6px;
+}
+
+.fr-safe-zone--bottom {
+  margin-top: 6px;
+}
+
+/* lanes */
+.fr-lane {
+  position: relative;
+  margin: 4px 0;
+}
+
+.fr-lane-road {
+  position: relative;
+  height: 52px;
+  border-radius: 999px;
+  background: linear-gradient(to right, #020617, #020617);
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  box-shadow: inset 0 0 16px rgba(15, 23, 42, 0.9);
+}
+
+/* moving lane highlight */
+.fr-lane-road::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(148, 163, 184, 0.28),
+    transparent
+  );
+  opacity: 0.4;
+  animation: frLaneSweep 4s linear infinite;
+}
+
+@keyframes frLaneSweep {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(260%);
+  }
+}
+
+/* dashed lines */
+.fr-lane-road::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(148, 163, 184, 0.6),
+    rgba(148, 163, 184, 0.6) 12px,
+    transparent 12px,
+    transparent 20px
+  );
+  opacity: 0.5;
+}
+
+/* lane prize */
+.fr-lane-prize {
+  position: absolute;
+  left: 10px;
+  top: 4px;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(190, 242, 100, 0.8);
+  color: #ecfccb;
+  z-index: 2;
+}
+
+/* cars (reuse chicken-road images but different class names) */
+.fr-lane-cars {
+  position: absolute;
+  inset: 0;
+}
+
+.fr-car {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 26px;
+  border-radius: 999px;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: frCarBounce 0.8s ease-in-out infinite alternate;
+}
+
+/* point to your existing vehicle images or frog-themed logs if you add them */
+.fr-car--car {
+  background-image: url("/public/images/chicken-road/car.png");
+}
+
+.fr-car--van {
+  background-image: url("/public/images/chicken-road/van.png");
+}
+
+.fr-car--bus {
+  background-image: url("/public/images/chicken-road/bus.png");
+}
+
+@keyframes frCarBounce {
+  0% {
+    transform: translateY(-50%) translateY(-1px);
+  }
+  100% {
+    transform: translateY(-50%) translateY(1px);
+  }
+}
+
+/* frog */
+.fr-frog {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.fr-frog--start {
+  bottom: 0;
+  top: auto;
+  transform: translate(-50%, 18px);
+}
+
+.fr-frog-body {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #22c55e, #15803d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.85);
+  transform-origin: center bottom;
+}
+
+.fr-frog-emoji {
+  font-size: 20px;
+}
+
+.fr-frog--jump .fr-frog-body {
+  animation: frFrogJump 0.22s ease-out;
+}
+
+.fr-frog--idle .fr-frog-body {
+  animation: frFrogIdle 1.1s ease-in-out infinite;
+}
+
+@keyframes frFrogJump {
+  0% {
+    transform: translateY(6px) scale(0.9);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes frFrogIdle {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.05);
+  }
+}
+
+/* right panel */
+.fr-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fr-balance-card {
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fr-panel {
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 10px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* reuse global panel styles from ChickenRoad if they’re in a shared file;
+   otherwise copy them here unchanged: */
+.panel-group {
+  border-radius: 10px;
+  padding: 6px 6px 8px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(30, 64, 175, 0.35);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+.panel-actions button {
+  border: none;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 11px;
+  padding: 4px 6px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  margin-left: 4px;
+}
+
+.panel-actions button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.panel-actions button:hover:not(:disabled) {
+  border-color: #a3e635;
+}
+
+.panel-input-row {
+  display: flex;
+  margin-top: 4px;
+  gap: 6px;
+  align-items: center;
+}
+
+.panel-input-row--small input {
+  max-width: 70px;
+}
+
+.panel-input-row input[type="number"] {
+  flex: 1;
+  background: #020617;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 6px 10px;
+  color: #e5e7eb;
+  font-size: 13px;
+}
+
+.panel-input-row input[type="number"]:disabled {
+  opacity: 0.6;
+}
+
+.panel-btn {
+  border-radius: 999px;
+  border: none;
+  padding: 6px 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: linear-gradient(90deg, #a3e635, #22c55e);
+  color: #052e16;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.5);
+}
+
+.panel-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  box-shadow: none;
+}
+
+.panel-text {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.panel-suffix {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* risk buttons */
+.fr-risk-buttons {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.fr-risk-btn {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 11px;
+  padding: 4px 6px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.fr-risk-btn--active {
+  border-color: #a3e635;
+  background: radial-gradient(circle at 20% 0, #a3e635, #22c55e);
+  color: #020617;
+  box-shadow: 0 0 14px rgba(190, 242, 100, 0.7);
+}
+
+/* actions */
+.fr-actions {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fr-main-btn {
+  width: 100%;
+}
+
+/* extra buttons if not global */
+.btn-secondary {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: #021209;
+}
+
+.btn-secondary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-danger {
+  background: #b91c1c;
+  color: #f9fafb;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+/* modal */
+.fr-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+.fr-modal {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #020617, #022c22);
+  border: 1px solid rgba(190, 242, 100, 0.6);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.95);
+  padding: 14px 16px 16px;
+  animation: frModalPop 0.25s ease-out;
+}
+
+.fr-modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #ecfccb;
+}
+
+.fr-modal-body {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #d1fae5;
+}
+
+.fr-modal-highlight {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #a3e635;
+}
+
+.fr-modal-actions {
+  margin-top: 12px;
+}
+
+/* animations */
+@keyframes frModalPop {
+  0% {
+    transform: translateY(10px) scale(0.96);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes frShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .fr-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.frog-road-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.frogroad-back-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.96);
+  color: #e5e7eb;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.frogroad-back-btn:hover {
+  border-color: #60a5fa;
+}

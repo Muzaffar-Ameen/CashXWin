@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./AviatorCrash.css";
 
 const ROUND_STATES = {
@@ -9,6 +11,7 @@ const ROUND_STATES = {
 };
 
 const AviatorCrash = () => {
+  const navigate = useNavigate();
   const [balance, setBalance] = useState(1000);
   const [betAmount, setBetAmount] = useState(10);
   const [activeBet, setActiveBet] = useState(0); // locked when round starts
@@ -109,8 +112,9 @@ const AviatorCrash = () => {
       // use exponential-ish growth; tuned for demo feel
       const elapsedSec = elapsedMs / 1000;
       // const newMult = +(1 + elapsedSec * elapsedSec * 0.6).toFixed(2);
-      const newMult = +(baseMultiplier + elapsedSec * elapsedSec * 0.6).toFixed(2);
-
+      const newMult = +(baseMultiplier + elapsedSec * elapsedSec * 0.6).toFixed(
+        2,
+      );
 
       setMultiplier((prev) => {
         const m = Math.max(prev, newMult);
@@ -203,7 +207,14 @@ const AviatorCrash = () => {
   return (
     <div className="game-shell page">
       <div className="game-card aviator-card">
-        <header className="game-header">
+        <header className="game-header aviator-header">
+          <button
+            type="button"
+            className="aviator-back-btn"
+            onClick={() => navigate("/")}
+          >
+            ⬅ Back
+          </button>
           <h1>Aviator Crash</h1>
           <p>
             Place a bet, watch the plane climb, and cash out before it flies

@@ -1,0 +1,598 @@
+.mines-card {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 16px;
+  padding: 14px 16px 16px;
+  background: radial-gradient(circle at top left, rgba(96, 165, 250, 0.12), #020617);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.85);
+}
+
+/* header with back button */
+.mines-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mines-back-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.96);
+  color: #e5e7eb;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mines-back-btn:hover {
+  border-color: #60a5fa;
+}
+
+.mines-title-block h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.mines-title-block p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* layout */
+.mines-layout {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: flex-start;
+}
+
+/* left - grid panel */
+.mines-grid-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mines-info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.mines-info-row .info-line {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mines-info-row .label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.mines-info-row .value {
+  font-size: 12px;
+}
+
+.mines-mult {
+  font-weight: 600;
+  color: #facc15;
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.8);
+}
+
+/* grid wrapper */
+.mines-grid-wrapper {
+  height: 285px;
+  width: 490px;
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 14px;
+  background: radial-gradient(circle at top, #020617, #020617 60%, #020617 100%);
+  border: 2px solid rgba(211, 8, 25, 0.4);
+  box-shadow: inset 0 0 18px rgba(15, 23, 42, 0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+.mines-grid-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 20% 0, rgba(56, 189, 248, 0.16), transparent 60%),
+    radial-gradient(circle at 80% 100%, rgba(96, 165, 250, 0.18), transparent 60%);
+  opacity: 0.6;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: minesGridGlow 10s ease-in-out infinite alternate;
+}
+
+.mines-grid--live {
+  box-shadow:
+    inset 0 0 18px rgba(15, 23, 42, 0.9),
+    0 0 14px rgba(56, 189, 248, 0.25);
+}
+
+@keyframes minesGridGlow {
+  0% {
+    transform: translate3d(0, 3px, 0) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate3d(6px, -3px, 0) scale(1.03);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(10px, 1px, 0) scale(1.01);
+    opacity: 0.55;
+  }
+}
+
+/* grid itself: small tiles, no scroll needed */
+.mines-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  z-index: 1;
+}
+
+/* base cell style – small square, clean */
+.mines-cell {
+  position: relative;
+  width: 80px;
+  height: 45px;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: radial-gradient(circle at 20% 0, #020617, #020617 75%);
+  color: #ebe5e5;
+  cursor: pointer;
+  box-shadow: inset 0 0 8px rgba(15, 23, 42, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition:
+    transform 0.1s ease-out,
+    box-shadow 0.1s ease-out,
+    border-color 0.1s ease-out,
+    background 0.1s ease-out;
+}
+
+.mines-cell:hover {
+  background: radial-gradient(circle at 20% 0, #b6ea0b, #020617 80%);
+}
+
+.mines-cell:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 8px rgba(15, 23, 42, 0.9),
+    0 0 8px rgba(56, 189, 248, 0.35);
+  border-color: rgba(96, 165, 250, 0.9);
+}
+
+.mines-cell:disabled {
+  cursor: default;
+  opacity: 0.9;
+}
+
+/* safe cell */
+.mines-cell--safe {
+  background: radial-gradient(circle at 20% 0, #064e3b, #022c22 80%);
+  border-color: #22c55e;
+  box-shadow:
+    inset 0 0 8px rgba(15, 118, 110, 0.9),
+    0 0 10px rgba(45, 212, 191, 0.7);
+  animation: minesSafePop 0.16s ease-out;
+}
+
+/* mine cell */
+.mines-cell--mine {
+  background: radial-gradient(circle at 20% 0, #450a0a, #111827 80%);
+  border-color: #f97316;
+  box-shadow:
+    inset 0 0 10px rgba(127, 29, 29, 0.95),
+    0 0 14px rgba(248, 113, 113, 0.8);
+  animation: minesMineShake 0.3s ease-in-out;
+}
+
+.cell-icon {
+  display: inline-block;
+  transform-origin: center;
+}
+
+@keyframes minesSafePop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes minesMineShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* banners under grid */
+.mines-banner {
+  margin-top: 8px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.mines-banner--bust {
+  background: rgba(127, 29, 29, 0.95);
+  color: #fee2e2;
+  border-color: #f97316;
+  box-shadow: 0 0 14px rgba(248, 113, 113, 0.7);
+}
+
+.mines-banner--win {
+  background: rgba(6, 95, 70, 0.96);
+  color: #dcfce7;
+  border-color: #22c55e;
+  box-shadow: 0 0 14px rgba(45, 212, 191, 0.7);
+}
+
+/* right side - controls (more compact) */
+.mines-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mines-balance-card {
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #e5e7eb;
+}
+
+.balance-row .label {
+  color: #9ca3af;
+}
+
+.balance-row .value {
+  font-weight: 600;
+}
+
+.mines-panel {
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 8px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* reused panel styles like other games */
+.panel-group {
+  border-radius: 8px;
+  padding: 5px 6px 6px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(30, 64, 175, 0.35);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #e5e7eb;
+}
+
+.panel-actions button {
+  border: none;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  margin-left: 3px;
+}
+
+.panel-actions button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.panel-actions button:hover:not(:disabled) {
+  border-color: #facc15;
+}
+
+.panel-input-row {
+  display: flex;
+  margin-top: 3px;
+  gap: 5px;
+  align-items: center;
+}
+
+.panel-input-row--small input {
+  max-width: 64px;
+}
+
+.panel-input-row input[type="number"] {
+  flex: 1;
+  background: #020617;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 5px 8px;
+  color: #e5e7eb;
+  font-size: 12px;
+}
+
+.panel-input-row input[type="number"]:disabled {
+  opacity: 0.6;
+}
+
+.panel-btn {
+  border-radius: 999px;
+  border: none;
+  padding: 5px 9px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: linear-gradient(90deg, #facc15, #f97316);
+  color: #0f172a;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 9px rgba(249, 115, 22, 0.5);
+}
+
+.panel-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  box-shadow: none;
+}
+
+.panel-suffix {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+/* actions */
+.mines-actions {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mines-main-btn {
+  width: 100%;
+}
+
+/* button variants */
+.btn-primary {
+  border-radius: 999px;
+  border: none;
+  padding: 7px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: linear-gradient(90deg, #60a5fa, #2563eb);
+  color: #0b1120;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 9px rgba(37, 99, 235, 0.5);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+  box-shadow: none;
+}
+
+.btn-danger {
+  border-radius: 999px;
+  border: none;
+  padding: 7px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: #b91c1c;
+  color: #f9fafb;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+.btn-outline {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 7px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: transparent;
+  color: #e5e7eb;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* MODAL (win / lose popup) */
+.mines-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+.mines-modal {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #020617, #111827);
+  border: 1px solid rgba(96, 165, 250, 0.7);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.95);
+  padding: 12px 14px 14px;
+  animation: minesModalPop 0.22s ease-out;
+}
+
+.mines-modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #dbeafe;
+}
+
+.mines-modal-body {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+.mines-modal-highlight {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #facc15;
+}
+
+.mines-modal-actions {
+  margin-top: 10px;
+}
+
+/* popup animation */
+@keyframes minesModalPop {
+  0% {
+    transform: translateY(8px) scale(0.96);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ========= RESPONSIVE: MAIN FIXES ========= */
+@media (max-width: 768px) {
+  .mines-card {
+    padding: 12px 12px 14px;
+  }
+
+  .mines-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  /* wrapper fills width and shrinks height */
+  .mines-grid-wrapper {
+    width: 100%;
+    height: auto;
+    padding: 8px;
+  }
+
+  /* grid uses full width with 5 columns */
+  .mines-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  /* cells shrink so 5 fit on screen */
+  .mines-cell {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .mines-header {
+    gap: 8px;
+  }
+
+  .mines-title-block h1 {
+    font-size: 16px;
+  }
+
+  .mines-title-block p {
+    font-size: 11px;
+  }
+}
+
+/* very small phones */
+@media (max-width: 480px) {
+  .mines-card {
+    padding: 10px;
+  }
+
+  .mines-grid-wrapper {
+    padding: 6px;
+  }
+
+  .mines-grid {
+    gap: 3px;
+  }
+
+  .mines-cell {
+    border-radius: 6px;
+    font-size: 12px;
+  }
+
+  .mines-panel {
+    padding: 6px;
+  }
+
+  .panel-input-row input[type="number"] {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  .btn-primary,
+  .btn-danger,
+  .btn-outline,
+  .panel-btn {
+    padding: 6px 8px;
+    font-size: 9px;
+  }
+}

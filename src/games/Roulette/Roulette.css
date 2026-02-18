@@ -574,3 +574,25 @@
     height: 260px;
   }
 }
+
+
+.roulette-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.roulette-back-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.96);
+  color: #e5e7eb;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.roulette-back-btn:hover {
+  border-color: #60a5fa;
+}
