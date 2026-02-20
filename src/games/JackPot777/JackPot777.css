@@ -85,7 +85,7 @@
   border-radius: 24px;
   padding: 16px 16px 18px;
   background:
-    url("/assets/jackpot-777-machine.png") center/cover no-repeat,
+    url("/public/assets/jackpot-777-machine.png") center/cover no-repeat,
     radial-gradient(circle at center, #111827 0%, #020617 70%);
   border: 1px solid rgba(248, 113, 113, 0.9);
   box-shadow:
