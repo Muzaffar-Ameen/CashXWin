@@ -23,11 +23,11 @@ const AviatorCrash = () => {
   const [cashoutMultiplier, setCashoutMultiplier] = useState(null);
   const [roundHistory, setRoundHistory] = useState([]); // [{multiplier, crashed}]
   const [autoCashout, setAutoCashout] = useState(2.0); // user setting
-  const [seedInfo] = useState({
-    serverSeed: "demo-server-seed-123",
-    clientSeed: "demo-client-seed-456",
-    nonce: 1,
-  });
+  // const [seedInfo] = useState({
+  //   serverSeed: "demo-server-seed-123",
+  //   clientSeed: "demo-client-seed-456",
+  //   nonce: 1,
+  // });
 
   const intervalRef = useRef(null);
   const planeRef = useRef(null);

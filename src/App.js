@@ -9,15 +9,15 @@ import About from "./Pages/About/About";
 import Privacy from "./Pages/Privacy/Privacy";
 import Contact from "./Pages/Contact/Contact";
 
-import Roulette from "./games/Roulette/Roulette";
+// import Roulette from "./games/Roulette/Roulette";
 import AviatorCrash from "./games/Aviator/AviatorCrash";
 
 // placeholder imports for upcoming games
-import LuckyDice from "./games/LuckyDice/LuckyDice";
-import ChickenRoad from "./games/ChickenRoad/ChickenRoad";
-import FrogRoad from "./games/FrogRoad/FrogRoad";
+// import LuckyDice from "./games/LuckyDice/LuckyDice";
+// import ChickenRoad from "./games/ChickenRoad/ChickenRoad";
+// import FrogRoad from "./games/FrogRoad/FrogRoad";
 import JackPot777 from "./games/JackPot777/JackPot777";
-import ThreePatti from "./games/ThreePatti/ThreePatti";
+// import ThreePatti from "./games/ThreePatti/ThreePatti";
 import Mines from "./games/Mines/Mines";
 function App() {
   return (
