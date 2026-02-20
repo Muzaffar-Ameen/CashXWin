@@ -218,7 +218,7 @@ const AviatorCrash = () => {
        * and extend backwards using scaleX
        */
 
-      const trailScale = Math.max(0, t);
+      // const trailScale = Math.max(0, t);
 
       trail.style.transform = `translate(${x}%, ${y}%) rotate(${angle}deg)`;
 
