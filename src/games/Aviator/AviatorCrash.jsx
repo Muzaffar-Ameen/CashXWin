@@ -35,14 +35,14 @@ const AviatorCrash = () => {
 
   // Generate a random crash point – simplified demo:
   // most rounds crash between 1x–5x, some high spikes. [web:165][web:170]
-  const generateCrashPoint = () => {
-    const r = Math.random();
-    if (r < 0.05) return +(10 + Math.random() * 40).toFixed(2); // 10x–50x rare
-    if (r < 0.3) return +(3 + Math.random() * 7).toFixed(2); // 3x–10x
-    if (r < 0.8) return +(1.2 + Math.random() * 2.3).toFixed(2); // 1.2x–3.5x
-    return +(1.0 + Math.random() * 1.0).toFixed(2); // 1x–2x
-  };
-
+  // const generateCrashPoint = () => {
+  //   const r = Math.random();
+  //   if (r < 0.05) return +(10 + Math.random() * 40).toFixed(2); // 10x–50x rare
+  //   if (r < 0.3) return +(3 + Math.random() * 7).toFixed(2); // 3x–10x
+  //   if (r < 0.8) return +(1.2 + Math.random() * 2.3).toFixed(2); // 1.2x–3.5x
+  //   return +(1.0 + Math.random() * 1.0).toFixed(2); // 1x–2x
+  // };
+  const generateCrashPoint = () => 40.0; // always crash at 5x
   // Reset state for next round (but keep history and balance)
   const resetRound = () => {
     setRoundState(ROUND_STATES.WAITING);
@@ -99,29 +99,56 @@ const AviatorCrash = () => {
     return () => clearTimeout(id);
   }, [roundState, countdown]);
 
-  // Flying loop – multiplier grows until crashPoint. [web:173]
+  // Flying loop – multiplier grows until crashPoint, with smooth segment wobble
   useEffect(() => {
     if (roundState !== ROUND_STATES.FLYING) return;
 
     const start = performance.now();
-    const baseMultiplier = multiplier; // should be 1.0 at start
+    const baseMultiplier = multiplier; // 1.0 at start
 
-    // tick ~30 times per second
+    // wobble segment state (direction persists for some time)
+    let segmentStartMs = start;
+    let segmentDir = 0; // -1 down, 0 straight, 1 up
+    let segmentDurationMs = 800 + Math.random() * 1200; // 0.8–2.0s
+
+    const pickNewSegment = (nowMs) => {
+      const r = Math.random();
+      if (r < 0.33) segmentDir = -1;
+      else if (r < 0.66) segmentDir = 0;
+      else segmentDir = 1;
+      segmentStartMs = nowMs;
+      segmentDurationMs = 800 + Math.random() * 1200;
+    };
+
     intervalRef.current = setInterval(() => {
-      const elapsedMs = performance.now() - start;
-      // use exponential-ish growth; tuned for demo feel
+      const now = performance.now();
+      const elapsedMs = now - start;
       const elapsedSec = elapsedMs / 1000;
-      // const newMult = +(1 + elapsedSec * elapsedSec * 0.6).toFixed(2);
-      const newMult = +(baseMultiplier + elapsedSec * elapsedSec * 0.6).toFixed(
-        2,
-      );
+
+      // base growth
+      const growth = elapsedSec * elapsedSec * 0.6;
+      let newMult = baseMultiplier + growth;
+
+      // segment wobble logic
+      const segElapsed = now - segmentStartMs;
+      if (segElapsed > segmentDurationMs) {
+        pickNewSegment(now);
+      }
+
+      // wobble strength grows a bit with time but stays small
+      const wobbleStrength = 0.02 + elapsedSec * 0.01; // ~0.02–0.1
+      const wobble = segmentDir * wobbleStrength;
+      newMult += wobble;
+
+      newMult = +newMult.toFixed(2);
 
       setMultiplier((prev) => {
         const m = Math.max(prev, newMult);
-        // auto cashout condition
+
         if (!hasCashedOut && activeBet > 0 && autoCashout && m >= autoCashout) {
           handleCashout();
         }
+
         return m;
       });
     }, 60);
@@ -165,28 +192,43 @@ const AviatorCrash = () => {
     }
   }, [multiplier, crashPoint, roundState]);
 
-  // Plane animation: translate based on multiplier and state
+  // Plane animation: plane + trail, with wobble and trail always behind
+
   useEffect(() => {
     const plane = planeRef.current;
     const trail = trailRef.current;
     if (!plane || !trail) return;
 
     if (roundState === ROUND_STATES.FLYING) {
-      const t = Math.min(multiplier / 10, 1); // 0..1
-      const x = t * 80; // percent of track width
-      const y = -t * 40; // up
+      const t = Math.min(multiplier / 10, 2);
 
-      plane.style.transform = `rotate(-28deg) translate(${x}%, ${y}%)`;
+      // plane movement
+      const x = t * 100;
+      const y = -t * 90;
 
-      trail.style.width = `${x + 10}%`;
+      const angle = 10;
+
+      // ✅ plane transform
+      plane.style.transform = `translate(${x}%, ${y}%) rotate(${angle}deg)`;
+
+      /**
+       * 🔥 REAL FIX
+       * ===========
+       * Trail must use SAME translate + rotate
+       * and extend backwards using scaleX
+       */
+
+      const trailScale = Math.max(0, t);
+
+      trail.style.transform = `translate(${x}%, ${y}%) rotate(${angle}deg)`;
+
       trail.style.opacity = "1";
     } else if (roundState === ROUND_STATES.CRASHED) {
-      // quick drop animation
-      plane.style.transform += " translateY(40%) rotate(-22deg)";
+      plane.style.transform += " translateY(40%)";
       trail.style.opacity = "0.2";
     } else {
-      plane.style.transform = "translate(0%, 0%)";
-      trail.style.width = "0%";
+      plane.style.transform = "translate(0%,0%) rotate(-20deg)";
+      trail.style.transform = "translate(0%,0%) rotate(-20deg) scaleX(0)";
       trail.style.opacity = "0";
     }
   }, [roundState, multiplier]);
@@ -258,8 +300,13 @@ const AviatorCrash = () => {
                   <div className="aviator-plane" ref={planeRef}>
                     <div className="plane-body">
                       <div className="plane-body-main">
-                        <span className="plane-icon">✈️</span>
+                        <img
+                          src="/assets/Plane.png"
+                          alt="Plane"
+                          className="plane-icon"
+                        />
                       </div>
+
                       <div className="plane-wing plane-wing--top" />
                       <div className="plane-wing plane-wing--bottom" />
                       <div className="plane-tail" />
@@ -279,7 +326,7 @@ const AviatorCrash = () => {
             </div>
 
             {/* provably fair demo info */}
-            <div className="aviator-fair-box">
+            {/* <div className="aviator-fair-box">
               <div className="fair-header">
                 <span>Provably Fair (Demo)</span>
               </div>
@@ -297,7 +344,7 @@ const AviatorCrash = () => {
                   <span className="fair-value">{seedInfo.nonce}</span>
                 </div>
               </div>
-            </div>
+            </div> */}
           </section>
 
           {/* RIGHT: controls + history */}

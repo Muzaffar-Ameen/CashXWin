@@ -33,14 +33,14 @@ function App() {
             <Route path="/contact" element={<Contact />} />
 
             {/* game routes */}
-            <Route path="/games/roulette" element={<Roulette />} />
+            {/* <Route path="/games/roulette" element={<Roulette />} /> */}
             <Route path="/games/Aviator-crash" element={<AviatorCrash />} />
             
-            <Route path="/games/lucky-dice" element={<LuckyDice />} />
-            <Route path="/games/chicken-road" element={<ChickenRoad />} />
-            <Route path="/games/frog-road" element={<FrogRoad />} />
+            {/* <Route path="/games/lucky-dice" element={<LuckyDice />} /> */}
+            {/* <Route path="/games/chicken-road" element={<ChickenRoad />} /> */}
+            {/* <Route path="/games/frog-road" element={<FrogRoad />} /> */}
             <Route path="/games/jackpot-777" element={<JackPot777 />} />
-            <Route path="/games/3-patti" element={<ThreePatti />} />
+            {/* <Route path="/games/3-patti" element={<ThreePatti />} /> */}
             <Route path="/games/mines" element={<Mines />} />
           </Routes>
         </main>

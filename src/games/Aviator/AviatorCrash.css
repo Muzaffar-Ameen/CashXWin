@@ -36,30 +36,30 @@
   overflow: hidden;
   border-radius: 16px;
   padding: 16px 16px 20px;
-  background: radial-gradient(circle at top, #0f172a, #020617 70%);
-  box-shadow: inset 0 0 24px rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  /* image from public/assets */
+  background-image: url("/public/assets/skyimg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 5px solid rgba(148, 163, 184, 0.35);
   min-height: 220px;
 }
 
-/* background grid / trail lines */
+/* background grid / mountains */
 .aviator-grid {
   position: absolute;
   inset: 0;
-  opacity: 0.14;
-  background-image: linear-gradient(
-      to right,
-      rgba(184, 148, 148, 0.3) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to top,
-      rgba(148, 163, 184, 0.2) 1px,
-      transparent 1px
-    );
-  background-size: 40px 40px;
   pointer-events: none;
+  overflow: hidden;
+
+  background-image: url("/public/assets/mountain.png");
+  background-size: cover;
+  background-position: bottom center;
+  background-repeat: no-repeat;
+
+  /* do NOT animate/transform this layer */
 }
+
 /* animated background in plane area */
 .aviator-flight-glow {
   position: absolute;
@@ -125,8 +125,8 @@
   position: relative;
   z-index: 1;
   margin-top: 10px;
-  height: 180px;              /* a bit taller so diagonal path has space */
-  overflow: visible;
+  height: 180px;
+  overflow: hidden; /* clip plane inside sky */
 }
 
 /* path / trail */
@@ -135,32 +135,27 @@
   left: 6%;
   bottom: 12%;
   height: 2px;
-  width: 0%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #f97316, #facc15);
-  box-shadow: 0 0 16px rgba(249, 115, 22, 0.9);
-  opacity: 0;
+  transform: rotate(-28deg) translate(0%, 0%);
   transform-origin: left center;
-  transform: rotate(-28deg);   /* same angle as plane */
-  transition: width 0.08s linear, opacity 0.2s ease-out;
+  transition: transform 0.065s linear;
+  width: 80%; /* % so it scales with sky width */
+
+  border-radius: 999px;
+  opacity: 0;
 }
 
-/* plane */
+/* plane wrapper */
 .aviator-plane-wrapper {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
 }
 
-/* this is what JS moves: we now sit on the same ~120° angle as the trail */
+/* plane – JS moves along this diagonal using translate percentages */
 .aviator-plane {
   position: absolute;
   left: 6%;
   bottom: 12%;
-  /* rotate first, then translate – so JS translate(x%, y%) is along this diagonal */
   transform: rotate(-28deg) translate(0%, 0%);
   transform-origin: center;
   transition: transform 0.065s linear;
@@ -169,23 +164,22 @@
   gap: 8px;
 }
 
-
-/* plane body – small extra motion when taking off */
+/* plane body */
 .plane-body {
   width: 50px;
   height: 30px;
   border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, #facc15, #b45309);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 18px rgba(250, 204, 21, 0.9);
   font-size: 18px;
   animation: planeTilt 0.7s ease-out forwards;
 }
 
-.plane-body span {
-  transform: translateX(1px);
+.plane-icon {
+  width: 100px;
+  height: auto;
+  display: block;
 }
 
 /* engine fire – more “jet” feel */
@@ -193,7 +187,6 @@
   width: 20px;
   height: 12px;
   border-radius: 999px;
-  background: radial-gradient(circle at 10% 50%, #f97316, transparent 70%);
   filter: blur(1px);
   animation: firePulse 0.25s ease-in-out infinite;
 }
@@ -211,7 +204,7 @@
   }
 }
 
-/* engine fire pulse (keep, just slightly faster) */
+/* engine fire pulse */
 @keyframes firePulse {
   0%,
   100% {
@@ -224,7 +217,7 @@
   }
 }
 
-/* crash banner – subtle “pop in” and glow when crash happens */
+/* crash banner */
 .aviator-crash-banner {
   position: absolute;
   right: 16px;
@@ -256,7 +249,6 @@
     opacity: 1;
   }
 }
-
 
 /* provably fair demo */
 .aviator-fair-box {
@@ -516,8 +508,17 @@
   .aviator-layout {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .aviator-track {
+    height: 150px;
+  }
+
+  .aviator-trail {
+    width: 70%;
+  }
 }
 
+/* header with back button */
 .aviator-header {
   display: flex;
   align-items: center;

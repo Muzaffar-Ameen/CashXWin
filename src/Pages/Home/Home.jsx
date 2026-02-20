@@ -2,13 +2,13 @@ import { NavLink } from "react-router-dom";
 import "./Home.css";
 
 const games = [
-  { label: "Roulette", path: "/games/roulette", active: true },
+  // { label: "Roulette", path: "/games/roulette", active: true },
   { label: "Aviator Crash", path: "/games/Aviator-crash", active: true },
-  { label: "Lucky Dice", path: "/games/lucky-dice", active: true },
-  { label: "Chicken Road", path: "/games/chicken-road", active: true },
-  { label: "Frog Road", path: "/games/frog-road", active: true },
+  // { label: "Lucky Dice", path: "/games/lucky-dice", active: true },
+  // { label: "Chicken Road", path: "/games/chicken-road", active: true },
+  // { label: "Frog Road", path: "/games/frog-road", active: true },
   { label: "Jack Pot777", path: "/games/jackpot-777", active: true },
-  { label: "3 Patti", path: "/games/3-patti", active: true },
+  // { label: "3 Patti", path: "/games/3-patti", active: true },
   { label: "Mines", path: "/games/mines", active: true },
 ];
 
@@ -70,14 +70,14 @@ const Home = () => {
 
           <div className="hero-orbit">
             <div className="hero-orbit-grid">
-              <NavLink
+              {/* <NavLink
                 to="/games/roulette"
                 className="hero-game-icon hero-game-icon--roulette"
                 title="Roulette"
               >
                 🎲
                 <span className="hero-game-tooltip">Roulette</span>
-              </NavLink>
+              </NavLink> */}
 
               <NavLink
                 to="/games/Aviator-crash"
@@ -88,16 +88,16 @@ const Home = () => {
                 <span className="hero-game-tooltip">Aviator Crash</span>
               </NavLink>
 
-              <NavLink
+              {/* <NavLink
                 to="/games/lucky-dice"
                 className="hero-game-icon hero-game-icon--dice"
                 title="Lucky Dice"
               >
                 🎯
                 <span className="hero-game-tooltip">Lucky Dice</span>
-              </NavLink>
+              </NavLink> */}
 
-              <NavLink
+              {/* <NavLink
                 to="/games/chicken-road"
                 className="hero-game-icon hero-game-icon--chicken"
                 title="Chicken Road"
@@ -113,7 +113,7 @@ const Home = () => {
               >
                 🐸
                 <span className="hero-game-tooltip">Frog Road</span>
-              </NavLink>
+              </NavLink> */}
 
               <NavLink
                 to="/games/jackpot-777"
@@ -124,14 +124,14 @@ const Home = () => {
                 <span className="hero-game-tooltip">Jack Pot777</span>
               </NavLink>
 
-              <NavLink
+              {/* <NavLink
                 to="/games/3-patti"
                 className="hero-game-icon hero-game-icon--patti"
                 title="3 Patti"
               >
                 ♠️
                 <span className="hero-game-tooltip">3 Patti</span>
-              </NavLink>
+              </NavLink> */}
 
               <NavLink
                 to="/games/mines"
